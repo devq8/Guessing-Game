@@ -1,10 +1,18 @@
 import React, { useState } from "react";
+import guessImage from "../image.png";
+import Messages from "./Messages";
 
 function Game({ randomNumber }) {
   console.log("The random number is " + randomNumber);
   const [guessedNumber, setGuessedNumber] = useState("");
   const [remainingAttempts, setRemainingAttempts] = useState(5);
   const [message, setMessage] = useState("");
+  const messages = {
+    win: "You won!",
+    close: "You are close",
+    tooClose: "You are too close",
+    far: "You are too far!",
+  };
   const handleGuess = () => {
     const parsedGuessedNumber = parseInt(guessedNumber);
     console.log("Guessed Number is " + parsedGuessedNumber);
@@ -13,21 +21,21 @@ function Game({ randomNumber }) {
       if (parsedGuessedNumber <= 0 || parsedGuessedNumber > 100) {
         setMessage("The number should be between 1 and 100");
       } else if (parsedGuessedNumber === randomNumber) {
-        setMessage("You won!");
+        setMessage(messages.win);
       } else if (
         Math.abs(parsedGuessedNumber - randomNumber) > 0 &&
         Math.abs(parsedGuessedNumber - randomNumber) < 10
       ) {
-        setMessage("You are too close");
+        setMessage(messages.tooClose);
         setRemainingAttempts(remainingAttempts - 1);
       } else if (
         Math.abs(parsedGuessedNumber - randomNumber) > 11 &&
         Math.abs(parsedGuessedNumber - randomNumber) < 20
       ) {
-        setMessage("You are close");
+        setMessage(messages.close);
         setRemainingAttempts(remainingAttempts - 1);
       } else if (Math.abs(parsedGuessedNumber - randomNumber) > 21) {
-        setMessage("You are far");
+        setMessage(messages.far);
         setRemainingAttempts(remainingAttempts - 1);
       }
     } else {
@@ -50,6 +58,7 @@ function Game({ randomNumber }) {
     <div className="App">
       <header className="App-header">
         <h1>Guessing Game</h1>
+        <img src={guessImage} className="images" />
       </header>
       <div className="App-body">
         <h4>Find a number by entering it below</h4>
@@ -76,7 +85,7 @@ function Game({ randomNumber }) {
           </button>
         </div>
         <p>You have only {remainingAttempts} attempts, use it wisely 😉</p>
-        <h3>{message}</h3>
+        <Messages msg={message} messages={messages} />
       </div>
     </div>
   );
